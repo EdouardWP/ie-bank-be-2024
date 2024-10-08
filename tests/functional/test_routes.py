@@ -40,19 +40,20 @@ def test_account_balance_update():
     account.balance = 100.0
     assert account.balance == 100.0
 
-def test_delete_account(testing_client):
+def test_create_account_with_invalid_name(testing_client):
     """
     GIVEN a Flask application
-    WHEN the '/accounts/<id>' page is deleted (DELETE)
-    THEN check the response is valid and the account is deleted
+    WHEN the '/accounts' page is posted to with a name that contains numbers
+    THEN check that the response returns an error (400 Bad Request)
     """
-    # First, create an account
+    # Attempt to create an account with a name containing numbers
     response = testing_client.post('/accounts', json={
-        'name': 'Jane Doe',
+        'name': 'John123',  # Invalid name (contains numbers)
         'currency': '€',
-        'country': 'Germany'
+        'country': 'France'
     })
-    assert response.status_code == 200
-   
 
+    # The response should return a 400 Bad Request status
+    assert response.status_code == 400
+    assert 'Invalid name' in response.get_data(as_text=True)  # Assuming this is the error message returned by the API
 

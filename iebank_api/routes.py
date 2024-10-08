@@ -25,12 +25,18 @@ def skull():
 @app.route('/accounts', methods=['POST'])
 def create_account():
     name = request.json['name']
+    
+    # Validation: Ensure the name doesn't contain numbers
+    if any(char.isdigit() for char in name):
+        return {'error': 'Invalid name: Name should not contain numbers'}, 400
+    
     currency = request.json['currency']
     country = request.json['country']
     account = Account(name, currency, country)
     db.session.add(account)
     db.session.commit()
     return format_account(account)
+
 
 @app.route('/accounts', methods=['GET'])
 def get_accounts():
@@ -67,3 +73,4 @@ def format_account(account):
         'status': account.status,
         'created_at': account.created_at
     }
+    
