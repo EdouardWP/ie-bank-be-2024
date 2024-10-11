@@ -55,5 +55,55 @@ def test_create_account_with_invalid_name(testing_client):
 
     # The response should return a 400 Bad Request status
     assert response.status_code == 400
-    assert 'Invalid name' in response.get_data(as_text=True)  # Assuming this is the error message returned by the API
+    assert 'Invalid name' in response.get_data(as_text=True)  
 
+def test_hello_world(testing_client):
+    """
+    GIVEN a Flask application
+    WHEN the '/' page is requested (GET)
+    THEN check that the response is 'Hello, World!'
+    """
+    response = testing_client.get('/')
+    assert response.status_code == 200
+    assert response.get_data(as_text=True) == 'Hello, World!'
+
+def test_get_single_account(testing_client):
+    """
+    GIVEN a Flask application
+    WHEN a specific account is requested (GET)
+    THEN check the account details are returned correctly
+    """
+    # Create an account first
+    create_response = testing_client.post('/accounts', json={
+        'name': 'Jane Doe',
+        'currency': '€',
+        'country': 'Spain'
+    })
+    account_id = create_response.json['id']
+    
+    # Now retrieve that account
+    response = testing_client.get(f'/accounts/{account_id}')
+    assert response.status_code == 200
+    assert 'Jane Doe' in response.get_data(as_text=True)
+
+
+def test_update_account(testing_client):
+    """
+    GIVEN a Flask application
+    WHEN a specific account is updated (PUT)
+    THEN check that the account details are updated correctly
+    """
+    # Create an account
+    create_response = testing_client.post('/accounts', json={
+        'name': 'Jane Doe',
+        'currency': '€',
+        'country': 'Spain'
+    })
+    account_id = create_response.json['id']
+    
+    # Update the account's name
+    update_response = testing_client.put(f'/accounts/{account_id}', json={
+        'name': 'Jane Smith'
+    })
+    assert update_response.status_code == 200
+    assert 'Jane Smith' in update_response.get_data(as_text=True)
