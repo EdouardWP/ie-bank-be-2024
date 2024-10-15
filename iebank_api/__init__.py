@@ -24,10 +24,6 @@ else:
     print("Running in production mode")
     app.config.from_object('config.ProductionConfig')
 
-# Ensure SQLAlchemy is configured with a database URI
-if not app.config.get('SQLALCHEMY_DATABASE_URI'):
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///ie_bank.db')
-
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
 
