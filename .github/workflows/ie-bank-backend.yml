@@ -11,8 +11,8 @@ permissions:
   id-token: write
 
 env:
-  BACKEND_WEBAPP_DEV: ewidmaierrui-be-dev
-  BACKEND_WEBAPP_UAT: ewidmaierrui-be-uat
+  BACKEND_WEBAPP_DEV: ewidmaierrui1-be-dev
+  BACKEND_WEBAPP_UAT: ewidmaierrui1-be-uat
 
 jobs:
   build:
